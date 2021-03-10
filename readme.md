@@ -2,8 +2,6 @@
 ## Ejercicio 1
 Documentacion utilizada para realizar el ejercicio 1
 
-https://www.googleapis.com/customsearch/v1?key=INSERT_YOUR_API_KEY&cx=HASH:omuauf_lfve&q=KEYWORDS
-
 https://developers.google.com/custom-search/v1/using_rest
 
 https://developers.google.com/custom-search/v1/introduction#identify_your_application_to_google_with_api_key
@@ -14,7 +12,7 @@ https://developers.google.com/custom-search/v1/site_restricted_api
 
 
 ## Ejercicio 2
-Teniendo en cuenta la configuración del projecto Web Scrapper, las respuestas del ejercicio 2 paso a responder de la siguiente manera.
+Teniendo en cuenta la configuración del ejercicio 1, las respuestas del ejercicio 2 las respondo con la misma arquitectura de conexión con la base de datos.
 
 1- Cuántos Usuarios hay por cada tipo de Rol ordenados de forma descendente en función del Rol más usado al menos.
 ```bash
