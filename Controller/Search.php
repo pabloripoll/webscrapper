@@ -1,6 +1,20 @@
 <?php
 session_start();
 
+// *** CHECK ERRORS *** //
+$display_errors = true;
+if( $display_errors == true ){
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);
+	error_reporting(E_ALL);
+} else {
+  ini_set('display_errors', 0);
+}
+
+require_once '../vendor/autoloader.php';
+
+use Model\Search;
+
 header("Content-type: application/javascript");
 
 function is_ajax()
@@ -13,52 +27,10 @@ if (is_ajax())
   if ( isset($_POST["action"]) && !empty($_POST["action"]) ) {
     $action = $_POST["action"];
     switch($action) {
-        case "search" : search(); break;
-        
+        case "search" : search(); break;        
     }
   }
 }
-
-class DB
-{
-    private $servername = "127.0.0.1";
-    private $username = "root";
-    private $password = "Mysql6983Perc!";
-    private $dbname = "nemon";
-
-    public function query($stmt) {
-        $response = new \stdClass();
-        $conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
-        $sql = $conn->query($stmt);
-        if ($conn->connect_error) {
-            $response->error = 'Connection failed: '. $conn->connect_error;
-        } else if ($sql->num_rows == 0) {
-            $response->result = false;
-        } else {
-            $response->result = [];
-            while($row = $sql->fetch_object()) {
-                $response->result[] = $row;
-            }
-        }
-        $conn->close();
-        return $response;
-    }
-}
-
-/* $stmt = "SELECT U.rol_id, R.rol, R.id, COUNT(R.id) AS suma_rol FROM usuarios U LEFT JOIN roles R ON R.id = U.rol_id GROUP BY U.rol_id ORDER BY suma_rol DESC;";
-$db = new DB();
-$sql = $db->query($stmt);
-if (!isset($sql->result)) {
-    echo $sql->error;
-} else {
-    if ($sql->result == 0) {
-        echo "0 results";
-    } else {
-        foreach($sql->result as $row) {
-            echo 'Totales de rol "'.$row->rol.'" con `id` '.$row->id.' = '.$row->suma_rol.'<br>';
-        }
-    }
-} */
 
 function domainStats($objects) {
     $domains = [];
@@ -72,17 +44,26 @@ function domainStats($objects) {
     $statistics = [];
     $i = 0;
     foreach($domains as $domain => $count){
-        // DB
-
-        $statistics = array_merge($statistics, array(['domain' => $domain, 'count' => $count, 'history' => 0]) );
+        $statistic = [];
+        $statistic['user'] = $_SESSION['user']['id'];
+        $statistic['domain'] =  $domain;
+        $statistic['count'] = $count;
+        $search = new Search;
+        $history = $search->getHistory($statistic);
+        is_numeric($history) ? : $history = 'error';
+        $statistic['history'] = $history;
+        $statistics = array_merge($statistics, array($statistic));
     }
     //array_multisort($sort['news_published'], SORT_DESC, $arr);
     return $statistics;
 }
 
-function searchEngine($keywords) {
-    $APIKEY = 'AIzaSyBZIQ7ctzV4haX-dz0ePfxVkAoEGEdNHUE';
-    $url = 'https://www.googleapis.com/customsearch/v1?key='.$APIKEY.'&cx=017576662512468239146:omuauf_lfve&q='.$keywords.'&start=10';
+function searchEngine($keywords, $page) {
+    $APIKEY = '';
+    $CX = '';    
+    $page == 1 ? $page = 0 : $page = ($page - 1).'0';
+    $pagination = '&start='.$page;
+    $url = 'https://www.googleapis.com/customsearch/v1?key='.$APIKEY.'&cx='.$CX.':omuauf_lfve&q='.$keywords.$pagination;
     $body = file_get_contents($url);
     $json = json_decode($body);
     if ($json->items){        
@@ -103,22 +84,28 @@ function sanatizeSearch($keywords)
         $keywords_sanatized = $value.'+';
     }
     $keywords_sanatized = rtrim($keywords_sanatized, '+');
-    return $keywords_sanatized;
+    if($keywords_sanatized == '+') {
+        return false;
+    } else {
+        return $keywords_sanatized;
+    }
+    
 }
 
 function search()
 {
     $ajax = $_POST;    
     $json = [];
+    $keywords = $_POST['keywords'];
+    $keywords_sanatized = sanatizeSearch($keywords);
+    is_numeric($_POST['page']) ? $page = $_POST['page'] : $page = 1;
 
-    if (empty($_POST['keywords'])) {
+    if (empty($keywords)) {
         $json["process"] = 1;
         $json["status"] = false;
         $json["data"]["msg"] = 'No existe valores de búsqueda';
     } else {
-        $keywords = $_POST['keywords'];
-        $keywords_sanatized = sanatizeSearch($keywords);
-        if ($keywords === false || empty($keywords_sanatized)) {
+        if ($keywords === false) {
             $json["process"] = 1;
             $json["status"] = false;
             $json["data"]["msg"] = 'Los valores de búsqueda no son adecuados';
@@ -126,7 +113,7 @@ function search()
             $json["process"] = 1;
             $json["status"] = true;
             $json["data"]["keywords"] = $keywords;
-            $json["data"]["html"] = searchEngine($keywords_sanatized);
+            $json["data"]["html"] = searchEngine($keywords_sanatized, $page);
         }
     }
 	/*

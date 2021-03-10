@@ -1,20 +1,38 @@
 //
+let Watching = {keywords : '', page : 1};
 
-const search = () => {
+const paginators = () => {
+    let paginators = 
+    `<li class="paginate_button" id="paginate_1">
+        <a class="paginate" aria-controls="dataTables-example" data-dt-idx="1" tabindex="0">1</a>
+    </li>
+    <li class="paginate_button" id="paginate_2">
+        <a class="paginate" aria-controls="dataTables-example" data-dt-idx="2" tabindex="0">2</a>
+    </li>`;
+    return paginators;
+}
+
+const search = (page) => {
+    if(page == undefined) page = 1;
+    //var page = page | 1;
+
     let keywords = $('#searcher_input').val();
-    if(keywords == ''){
+    if(keywords == '' || (Watching.keywords == keywords && Watching.page == page)){
 
     } else {
         $('.search-results-for').html('<i class="fa fa-spin fa-spinner"></i>');
         $('#search-result-statistics').html('<i class="fa fa-spin fa-spinner"></i>');
         $('#search-result-statistics').html('<i class="fa fa-spin fa-spinner"></i>');
+        $('.pagination').html('<i class="fa fa-spin fa-spinner"></i>');
+        //
         var data = {
             keywords : keywords,
+            page : page,
             action: "search"
         };
         data = $(this).serialize() + "&" + $.param(data);
         $.ajax({
-            url: "model/searcher.php",
+            url: "Controller/Search.php",
             type: "POST",
             data: data,
             dataType: "json",
@@ -62,10 +80,17 @@ const search = () => {
                                     </tr>`;
                     });
                 }
+                //
                 $('.search-results-for').html(searchKeywords);
                 $('#search-result-statistics').html(statisticsRows);
                 $('#search-result-items').html(searchRows);
-                console.log(data.html);
+                //
+                Watching.keywords = keywords;
+                
+                Watching.page = page;
+                $('.pagination').html(paginators());
+                $('#paginate_' + page).addClass('active');                
+                //console.log(data.html);
             }           
         })
         .fail(function(){
@@ -75,7 +100,7 @@ const search = () => {
             //console.log("ajax Complete");
         });        
         return false;
-    }    
+    }
 }
 
 
@@ -88,4 +113,9 @@ $('#searcher_input').keyup(function(e){
 });
 $('#searcher_btn').on('click', function(){
     search();
+})
+
+$(document).on('click', '.paginate', function(){
+    var page = $(this).attr('data-dt-idx');
+    search(page);
 })

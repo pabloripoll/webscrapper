@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+if ( !isset($_SESSION['user']) ) {
+    $_SESSION['user'] = [
+        'id' => 1
+    ];
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +17,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Web Scrapper Test</title>
+    <title>Web Scrapper</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="/templates/startadmin/css/bootstrap.min.css" rel="stylesheet">
@@ -26,6 +36,7 @@
 
     <!-- Custom Fonts -->
     <link href="/templates/startadmin/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="/dev/webscrapper/view/css/style.css" rel="stylesheet" type="text/css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -41,7 +52,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">WebScrapper</a>
+            <a class="navbar-brand" href="#">Pablo Ripoll</a>
         </div>
 
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -103,7 +114,7 @@
                 <ul class="nav" id="side-menu">                    
                     <li>
                         <a href="/exam/nemon/" class="active">
-                            <i class="fa fa-search fa-fw"></i> Buscador
+                            <i class="fa fa-search fa-fw"></i> Web Scrapper
                         </a>
                     </li>
                     <!-- <li>
@@ -139,7 +150,7 @@
 
             <div class="row">
                 <div class="col-lg-12">
-                    <h4 class="page-header">Buscador</h4>
+                    <h4 class="page-header">Web Scrapper</h4>
                 </div>
             </div>
             <div class="row">
@@ -196,38 +207,15 @@
 
                                     </tbody>
                                 </table>
-                            </div>                            
+                            </div>
                             
                         </div><!-- /.panel-body -->
                         
                         <div class="panel-footer">
                             
-                                <ul class="pagination">
-                                    <!-- <li class="paginate_button previous disabled" id="dataTables-example_previous">
-                                        <a href="#" aria-controls="dataTables-example" data-dt-idx="0" tabindex="0">Primero</a>
-                                    </li> -->
-                                    <li class="paginate_button active">
-                                        <a href="#" aria-controls="dataTables-example" data-dt-idx="1" tabindex="0">1</a>
-                                    </li>
-                                    <li class="paginate_button ">
-                                        <a href="#" aria-controls="dataTables-example" data-dt-idx="2" tabindex="0">2</a>
-                                    </li>
-                                    <li class="paginate_button ">
-                                        <a href="#" aria-controls="dataTables-example" data-dt-idx="3" tabindex="0">3</a>
-                                    </li>
-                                    <li class="paginate_button ">
-                                        <a href="#" aria-controls="dataTables-example" data-dt-idx="4" tabindex="0">4</a>
-                                    </li>
-                                    <li class="paginate_button ">
-                                        <a href="#" aria-controls="dataTables-example" data-dt-idx="5" tabindex="0">5</a>
-                                    </li>
-                                    <li class="paginate_button ">
-                                        <a href="#" aria-controls="dataTables-example" data-dt-idx="6" tabindex="0">6</a>
-                                    </li>
-                                    <li class="paginate_button next" id="dataTables-example_next">
-                                        <a href="#" aria-controls="dataTables-example" data-dt-idx="7" tabindex="0">Último</a>
-                                    </li>
-                                </ul>
+                            <ul class="pagination">
+                                
+                            </ul>
                             <!-- pagination -->
 
                         </div>
@@ -240,7 +228,7 @@
                 <div class="col-lg-3 col-xs-12">
                     
                 </div>
-            <!-- ... Your content goes here ... -->
+                <!-- ... Your content goes here ... -->
 
         </div>
     </div>
@@ -260,21 +248,7 @@
 <script src="/templates/startadmin/js/startmin.js"></script>
 
 <!-- Searcher JavaScript -->
-<script src="/exam/nemon/js/searcher.js"></script>
-<!-- <script>
-function hndlr(response) {
-    for (var i = 0; i < response.items.length; i++) {
-        var item = response.items[i];
-        // in production code, item.htmlTitle should have the HTML entities escaped.
-        document.getElementById("external-content").innerHTML += "<br>" + item.htmlTitle;
-    }
-}
-</script>
-<?php
-$gKey = 'AIzaSyBZIQ7ctzV4haX-dz0ePfxVkAoEGEdNHUE';
-?>
-<script src="https://www.googleapis.com/customsearch/v1?key=<?php //echo $gKey; ?>&cx=017576662512468239146:omuauf_lfve&q=cars&callback=hndlr">
- -->
+<script src="/dev/webscrapper/view/js/search.js"></script>
 
 </body>
 </html>
