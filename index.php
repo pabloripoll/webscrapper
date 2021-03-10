@@ -113,7 +113,7 @@ if ( !isset($_SESSION['user']) ) {
 
                 <ul class="nav" id="side-menu">                    
                     <li>
-                        <a href="/exam/nemon/" class="active">
+                        <a href="/dev/webscrapper/" class="active">
                             <i class="fa fa-search fa-fw"></i> Web Scrapper
                         </a>
                     </li>
