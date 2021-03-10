@@ -1,5 +1,9 @@
 
 ## Ejercicio 1
+El código del ejercicio 1 se encuetra en este repositorio a excepción del diseño de la plantilla html.
+
+El ejercicio funcionando los podéis ver en este enlace: http://pabloripoll.com/dev/webscrapper/
+
 Documentacion utilizada para realizar el ejercicio 1
 
 https://developers.google.com/custom-search/v1/using_rest
